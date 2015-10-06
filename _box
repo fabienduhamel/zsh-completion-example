@@ -1,0 +1,32 @@
+#compdef box
+
+_box_image_args() {
+    declare -a box_images
+    box_images=($(_box_get_image_list))
+    _describe 'box_images' box_images
+}
+
+_box_options_args() {
+    declare -a box_options
+    box_options=($(_box_get_command_list))
+    _describe 'box_options' box_options
+}
+
+local -a _1st_arguments
+_1st_arguments=($(_box_get_command_list))
+
+_arguments '*:: :->command'
+
+if (( CURRENT == 1 )); then
+    _describe -t commands "box command" _1st_arguments
+    return
+fi
+
+case "$words[1]" in
+    start|stop|restart|status)
+       _box_image_args ;;
+    help)
+        _box_options_args ;;
+    build|destroy|graph|list|rebuild|web|worker)
+       _box_image_args ;;
+esac
